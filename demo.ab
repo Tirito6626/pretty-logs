@@ -1,15 +1,16 @@
 import * from "src/main.ab"
 
+main {
+    for item in ["default", "inverted", "minimal", "classic"] {
+        echo("{item}:")
+        update_format(item);
+        error("test")
+        log("test")
+        warn("test")
+        success("test")
+        echo("")
+    }
 
-for item in ["default", "inverted", "minimal", "classic"] {
-    echo("{item}:")
-    update_format(item);
-    error("test")
-    log("test")
-    warn("test")
-    success("test")
-    echo("")
+    echo("invalid argument:")
+    trust error_invalid_argument(["test", "--testing"], 1, "--test")
 }
-
-echo("invalid argument:")
-trust error_invalid_argument(["test", "--testing"], 1, "--test")
