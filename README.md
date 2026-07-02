@@ -94,23 +94,29 @@ pub fun throw(type: Text, arguments: [Text], position: Int, correct: Text = ""):
 Throw a predefined error template
 
 Default types:
-- "invalid-arg": "Invalid argument" error
-- `position` represents the array index of the invalid argument
-- If `correct` is supplied, an extra "Did you mean [correct]?" is printed
-- "too-few-args": "Too few arguments" error
-- `position` represents the minimum amount of arguments
-- If `correct` is supplied, it shows as a placeholder to one of the missing arguments
-- "missing-value": "Option requires a value" error
-- `position` represents the array index of the argument
-- If `correct` is supplied, it shows as a value placeholder for the option
-- "invalid-value": "Option expects type" error
-- `position` represents the array index of the argument
-- `correct` is mandatory in `<ValueType> <RequiredType>` format, separated by a comma. Arrays are not supported
+- ## `invalid-arg`
+  - `position` represents the array index of the invalid argument
+  - If `correct` is supplied, an extra "Did you mean [correct]?" is printed
+<img width="277" height="99" alt="зображення" src="https://github.com/user-attachments/assets/4f2643f5-3beb-413a-9d76-48bb5994586c" />
 
-Note: `arguments[0]` is consumed as the script name, use custom name if you're using custom arguments array
+- ## `too-few-args`
+  - `position` represents the minimum amount of arguments
+  - If `correct` is supplied, it shows as a placeholder to one of the missing arguments
+<img width="416" height="97" alt="зображення" src="https://github.com/user-attachments/assets/d508d2b2-ec5e-4517-b2e8-b542737739fc" />
+
+- ## `missing-value`
+  - `position` represents the array index of the argument
+  - If `correct` is supplied, it shows as a value placeholder for the option
+<img width="521" height="74" alt="зображення" src="https://github.com/user-attachments/assets/030667a9-4799-4bb6-8999-f7958ec6a0ec" />
+
+- ## `invalid-value`
+  - `position` represents the array index of the argument
+  - `correct` is mandatory in `<ValueType> <RequiredType>` format, separated by a comma. Arrays are not supported
+<img width="521" height="74" alt="зображення" src="https://github.com/user-attachments/assets/f1301c64-c4a3-48dc-aeeb-919be5c7d272" />
 
 
-<img width="328" height="94" alt="зображення" src="https://github.com/user-attachments/assets/eebd864d-1ab7-42c8-b3db-e95ec69765cd" />
+
+**Note: `arguments[0]` is consumed as the script name, use custom name if you're using custom arguments array**
 
 ## `log`
 
