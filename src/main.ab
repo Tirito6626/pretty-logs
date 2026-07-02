@@ -84,7 +84,7 @@ pub fun error_exit(message: Text, code: Int = 1, with_timestamp: Bool = false, m
 /// `position` is the array index of the invalid argument
 /// If `correct` is supplied, an extra "Did you mean <correct>?" is printed
 pub fun error_invalid_argument(arguments: [Text], position: Int, correct: Text = ""): Null? {
-    if len(arguments) > position + 1: lib_error("The arguments array is shorter than the argument position")?
+    if len(arguments) < position + 1: lib_error("The arguments array is shorter than the argument position")?
     error("Invalid argument");
     arguments[position] = "{RED}{UNDERLINE}{arguments[position]}{NC}"
 
