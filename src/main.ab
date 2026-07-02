@@ -44,11 +44,12 @@ pub fun update_log_format(prefix_style: Text, monotone: Bool = false): Null {
     if monotone: LOG_FORMAT += BLUE
 }
 
-/// Reloads all formats with `PREFIX_FORMAT`
-pub fun reload_format() {
-    update_error_format(PREFIX_FORMAT);
-    update_log_format(PREFIX_FORMAT);
-    update_success_format(PREFIX_FORMAT);
+/// Reloads all formats
+pub fun update_format(prefix: Text = PREFIX_FORMAT, monotone: Bool = false) {
+    update_error_format(prefix, monotone);
+    update_log_format(prefix, monotone);
+    update_warn_format(prefix, monotone);
+    update_success_format(prefix, monotone);
 }
 
 fun lib_error(message: Text): Null? {
@@ -112,43 +113,4 @@ pub fun warn(message: Text, with_timestamp: Bool = false): Null {
     echo("{WARN_FORMAT} {message}{NC}")
 }
 
-reload_format();
-
-update_error_format("minimal");
-error("test")
-update_error_format("classic");
-error("test
-now this looks very weird with that
-extra indentation")
-update_error_format("default");
-error("test\nok")
-update_error_format("inverted");
-error("test")
-echo("")
-update_log_format("minimal")
-log("test", true)
-update_log_format("classic");
-log("test", true)
-update_log_format("default");
-log("test", true)
-update_log_format("inverted");
-log("test", true)
-echo("")
-update_success_format("minimal")
-success("test")
-update_success_format("classic");
-success("test")
-update_success_format("default");
-success("test")
-update_success_format("inverted");
-success("test")
-echo("")
-update_warn_format("minimal")
-warn("test")
-update_warn_format("classic");
-warn("test")
-update_warn_format("default");
-warn("test")
-update_warn_format("inverted");
-warn("test")
-trust error_invalid_argument(["test", "--testing"], 1, "--test")
+update_format();
