@@ -85,24 +85,32 @@ pub fun error_fail(message: Text, code: Int = 1, with_timestamp: Bool = false, m
 
 Prints an error message with predefined format and fails with specified code
 
-## `error_invalid_argument`
+## `throw`
 
 ```ab
-pub fun error_invalid_argument(arguments: [Text], position: Int, correct: Text = ""): Null? 
+pub fun throw(type: Text, arguments: [Text], position: Int, correct: Text = ""): Null? 
 ```
 
-Prints "Invalid Argument" error with marking the invalid argument
-`position` is the array index of the invalid argument
-If `correct` is supplied, an extra "Did you mean [correct]?" is printed
+Throw a predefined error template
+
+Default types:
+- "invalid-arg": "Invalid argument" error
+- `position` represents the array index of the invalid argument
+- If `correct` is supplied, an extra "Did you mean [correct]?" is printed
+- "too-few-args": "Too few arguments" error
+- `position` represents the minimum amount of arguments
+- If `correct` is supplied, it shows as a placeholder to one of the missing arguments
+- "missing-value": "Option requires a value" error
+- `position` represents the array index of the argument
+- If `correct` is supplied, it shows as a value placeholder for the option
+- "invalid-value": "Option expects type" error
+- `position` represents the array index of the argument
+- `correct` is mandatory in `<ValueType> <RequiredType>` format, separated by a comma. Arrays are not supported
+
+Note: `arguments[0]` is consumed as the script name, use custom name if you're using custom arguments array
+
 
 <img width="328" height="94" alt="зображення" src="https://github.com/user-attachments/assets/eebd864d-1ab7-42c8-b3db-e95ec69765cd" />
-
-
-## `lib_error`
-
-```ab
-fun lib_error(message: Text): Null? 
-```
 
 ## `log`
 
@@ -112,13 +120,14 @@ pub fun log(message: Text, with_timestamp: Bool = false): Null
 
 Prints a log message with predefined format
 
-## `reload_format`
+
+## `warn`
 
 ```ab
-pub fun reload_format() 
+pub fun warn(message: Text, with_timestamp: Bool = false): Null 
 ```
 
-Reloads all formats with `PREFIX_FORMAT`
+Prints a warning message with predefined format
 
 ## `success`
 
@@ -134,7 +143,6 @@ Prints a success message with predefined format
 pub fun update_error_format(prefix_style: Text, monotone: Bool = false): Null 
 ```
 
-Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
 
 ## `update_log_format`
 
@@ -154,11 +162,17 @@ pub fun update_success_format(prefix_style: Text, monotone: Bool = false): Null
 pub fun update_warn_format(prefix_style: Text, monotone: Bool = false): Null 
 ```
 
-## `warn`
+## `reload_format`
 
 ```ab
-pub fun warn(message: Text, with_timestamp: Bool = false): Null 
+pub fun reload_format() 
 ```
 
-Prints a warning message with predefined format
+Reloads all formats with `PREFIX_FORMAT`
 
+
+## `lib_error`
+
+```ab
+fun lib_error(message: Text): Null? 
+```

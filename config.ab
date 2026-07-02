@@ -5,6 +5,7 @@ pub const BLACK = "{ESC}[38;5;0m"
 
 pub const RED = "{ESC}[38;5;1m"
 pub const RED_BG = "{ESC}[48;5;1m"
+pub const RED_UNDERLINE = "{ESC}[4;58:5:1m"
 
 pub const GREEN = "{ESC}[38;5;2m"
 pub const GREEN_BG = "{ESC}[48;5;2m"

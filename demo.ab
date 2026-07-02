@@ -1,6 +1,6 @@
 import * from "src/main.ab"
 
-main {
+main(args) {
     for item in ["default", "inverted", "minimal", "classic"] {
         echo("{item}:\n")
         update_format(item);
@@ -10,8 +10,14 @@ main {
         success("test")
         echo("")
     }
-
-    echo("invalid argument:")
-    trust error_invalid_argument(["test", "--testing"], 1, "--test")
+    update_format();
+    echo("")
+    trust throw("invalid-arg", ["pretty-logs.ab", "test", "--testing"], 1, "--test")
+    echo("")
+    trust throw("too-few-args", ["pretty-logs.ab", "test", "--testing"], 4, "--test")
+    echo("")
+    trust throw("missing-value", ["pretty-logs.ab", "test", "--foo", "--testing"], 1, "<int>")
+    echo("")
+    trust throw("invalid-value", ["pretty-logs.ab", "test", "--foo", "test"], 1, "Text Bool")
     echo("")
 }

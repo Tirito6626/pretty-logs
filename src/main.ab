@@ -1,6 +1,7 @@
 #!/bin/env amethyst
 import * from "../config.ab"
-
+import { array_contains, array_shift } from "std/array"
+import { split, lpad } from "std/text";
 #[allow_public_mutable]
 let ERROR_FORMAT = "";
 #[allow_public_mutable]
@@ -16,7 +17,7 @@ let WARN_FORMAT = "";
 
 /// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
 pub fun update_error_format(prefix_style: Text, monotone: Bool = false): Null {
-    ERROR_FORMAT = print_prefix(prefix_style, "ERROR", RED, RED_BG)
+    if len(prefix_style) > 0: ERROR_FORMAT = print_prefix(prefix_style, "ERROR", RED, RED_BG)
     if monotone: ERROR_FORMAT += RED
 }
 
@@ -24,7 +25,7 @@ pub fun update_error_format(prefix_style: Text, monotone: Bool = false): Null {
 
 /// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
 pub fun update_warn_format(prefix_style: Text, monotone: Bool = false): Null {
-    WARN_FORMAT = print_prefix(prefix_style, "WARN", YELLOW, YELLOW_BG)
+    if len(prefix_style) > 0: WARN_FORMAT = print_prefix(prefix_style, "WARN", YELLOW, YELLOW_BG)
     if monotone: WARN_FORMAT += YELLOW
 }
 
@@ -32,7 +33,7 @@ pub fun update_warn_format(prefix_style: Text, monotone: Bool = false): Null {
 
 /// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
 pub fun update_success_format(prefix_style: Text, monotone: Bool = false): Null {
-    SUCCESS_FORMAT = print_prefix(prefix_style, "SUCCESS", GREEN, GREEN_BG)
+    if len(prefix_style) > 0: SUCCESS_FORMAT = print_prefix(prefix_style, "SUCCESS", GREEN, GREEN_BG)
     if monotone: SUCCESS_FORMAT += GREEN
 }
 
@@ -40,7 +41,7 @@ pub fun update_success_format(prefix_style: Text, monotone: Bool = false): Null 
 
 /// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
 pub fun update_log_format(prefix_style: Text, monotone: Bool = false): Null {
-    LOG_FORMAT = print_prefix(prefix_style, "INFO", BLUE, BLUE_BG)
+    if len(prefix_style) > 0: LOG_FORMAT = print_prefix(prefix_style, "INFO", BLUE, BLUE_BG)
     if monotone: LOG_FORMAT += BLUE
 }
 
@@ -80,16 +81,83 @@ pub fun error_exit(message: Text, code: Int = 1, with_timestamp: Bool = false, m
     exit(code);
 }
 
-/// Prints "Invalid Argument" error with marking the invalid argument
-/// `position` is the array index of the invalid argument
-/// If `correct` is supplied, an extra "Did you mean <correct>?" is printed
-pub fun error_invalid_argument(arguments: [Text], position: Int, correct: Text = ""): Null? {
-    if len(arguments) < position + 1: lib_error("The arguments array is shorter than the argument position")?
-    error("Invalid argument");
-    arguments[position] = "{RED}{UNDERLINE}{arguments[position]}{NC}"
+/// Throw a predefined error template
+/// 
+/// Default types:
+/// - "invalid-arg": "Invalid argument" error
+///   - `position` represents the array index of the invalid argument
+///   - If `correct` is supplied, an extra "Did you mean <correct>?" is printed
+/// - "too-few-args": "Too few arguments" error
+///   - `position` represents the minimum amount of arguments
+///   - If `correct` is supplied, it shows as a placeholder to one of the missing arguments
+/// - "missing-value": "Option requires a value" error
+///   - `position` represents the array index of the argument
+///   - If `correct` is supplied, it shows as a value placeholder for the option
+/// - "invalid-value": "Option expects type" error
+///   - `position` represents the array index of the argument
+///   - `correct` is mandatory in `<ValueType> <RequiredType>` format, separated by a comma. Arrays are not supported
+///
+/// Note: `arguments[0]` is consumed as the script name, use custom name if you're using custom arguments array
+pub fun throw(type: Text, arguments: [Text], position: Int, correct: Text = ""): Null? {
+    const script_name = arguments[0];
+    array_shift(arguments)?;
+    const args_len = len(arguments);
+    if {
+        type == "invalid-arg" {
+            if args_len < position + 1: lib_error("The arguments array is shorter than the argument position")?
+            update_error_format("", true);
+            error("Invalid argument");
+            arguments[position] = "{RED}{UNDERLINE}{arguments[position]}{NC}"
 
-    trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}\$0{NC} {arguments}" $
-    if len(correct) > 0: echo("Did you mean {BOLD}{WHITE}{correct}{NC}?");
+            trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}{script_name}{NC} {arguments}" $
+            if len(correct) > 0: echo("Did you mean {BOLD}{WHITE}{correct}{NC}?");
+            fail(1)
+        }
+        type == "too-few-args" {
+            if args_len >= position: lib_error("The arguments array already meets the length requirement")?
+            update_error_format("", true);
+            error("Too few arguments\nExpected {position}, but only {args_len} were provided");
+
+            let missing_count = position - args_len;
+            const missing_args = "";
+            if len(correct) > 0 {
+                correct = " {RED_UNDERLINE}{GRAY}{correct}{NC} {GRAY}(tip){NC} ";
+                missing_count = missing_count - 1;
+            }
+
+            if missing_count > 0: trust $ printf -v "{nameof(missing_args)}" "{RED}{UNDERLINE}    %.0s" {1..missing_count} $
+            trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}{script_name}{NC} {arguments}{correct}{missing_args}{NC}" $
+            fail(1)
+        }
+        type == "missing-value" {
+            if args_len < position + 1: lib_error("The arguments array is shorter than the argument position")?
+            update_error_format("", true);
+            error("Option '{arguments[position]}' requires a value, but none was provided");
+            const extra_args = args_len != position + 1 then arguments[position + 1..args_len] else [];
+            const value = len(correct) > 0 then "{GRAY}{RED_UNDERLINE}{correct}{NC}" else "{RED_UNDERLINE}    {NC}";
+
+            trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}{script_name}{NC} {arguments[0..=position]} {value} {extra_args}{NC}" $
+            fail(1)
+        }
+        type == "invalid-value" {
+            if args_len < position + 2: lib_error("The arguments array is shorter than the argument value position")?
+            if len(correct) == 0: lib_error("Type \"invalid-value\" requires \"option\" argument")?
+            const option = arguments[position]
+            const value = arguments[position + 1];
+            const [type, expected_type] = split(correct, " ");
+
+            if not array_contains(["Text", "Int", "Num", "Bool"], type) or not array_contains(["Text", "Int", "Num", "Bool"], expected_type):
+                lib_error("Invalid value type or expect type provided")?
+            update_error_format("", true);
+
+            arguments[position + 1] = "{RED}{UNDERLINE}{value}{NC}";
+            error("Option '{option}' expects type {GREEN}{expected_type}{NC}, {RED}but got {GREEN}{type}{NC} {RED}instead");
+
+            trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}{script_name}{NC} {arguments} {NC}" $
+            fail(1)
+        }
+        else: lib_error("Invalid error type provided")?
+    }
 }
 
 /// Prints a log message with predefined format
