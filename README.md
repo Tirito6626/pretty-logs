@@ -2,6 +2,42 @@
 
 Tiny, dependency-less, highly customizable Amber library for pretty error/log/warning messages
 
+## Installation
+
+### using amethyst
+Add `pretty-logs` to `amethyst.ini`:
+
+```ini
+[dependencies]
+pretty-logs = https://github.com/Tirito6626/pretty-logs
+```
+
+Download the dependency:
+
+```sh
+amethyst install
+```
+
+Import into your project:
+
+```ab
+import * from "../vendor/pretty-logs/src/main.ab"
+```
+
+### using git
+Clone the repository:
+
+```sh
+git clone https://github.com/Tirito6626/pretty-logs
+```
+
+Import into your project:
+
+```ab
+import * from "/path/to/pretty-logs/src/main.ab"
+```
+
+
 ## `error`
 
 ```ab

@@ -2,13 +2,13 @@ import * from "src/main.ab"
 
 main {
     for item in ["default", "inverted", "minimal", "classic"] {
-        echo("{item}:")
+        echo("{item}:\n\n")
         update_format(item);
         error("test")
         log("test")
         warn("test")
         success("test")
-        echo("")
+        echo("\n\n")
     }
 
     echo("invalid argument:")
