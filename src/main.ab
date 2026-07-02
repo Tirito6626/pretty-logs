@@ -1,0 +1,154 @@
+#!/bin/env amethyst
+import * from "../config.ab"
+
+#[allow_public_mutable]
+let ERROR_FORMAT = "";
+#[allow_public_mutable]
+let LOG_FORMAT = "";
+#[allow_public_mutable]
+let SUCCESS_FORMAT = "";
+#[allow_public_mutable]
+let WARN_FORMAT = "";
+
+
+
+/// Updates output format for `error`
+
+/// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
+pub fun update_error_format(prefix_style: Text, monotone: Bool = false): Null {
+    ERROR_FORMAT = print_prefix(prefix_style, "ERROR", RED, RED_BG)
+    if monotone: ERROR_FORMAT += RED
+}
+
+/// Updates output format for `warn`
+
+/// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
+pub fun update_warn_format(prefix_style: Text, monotone: Bool = false): Null {
+    WARN_FORMAT = print_prefix(prefix_style, "WARN", YELLOW, YELLOW_BG)
+    if monotone: WARN_FORMAT += YELLOW
+}
+
+/// Updates output format for `success`
+
+/// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
+pub fun update_success_format(prefix_style: Text, monotone: Bool = false): Null {
+    SUCCESS_FORMAT = print_prefix(prefix_style, "SUCCESS", GREEN, GREEN_BG)
+    if monotone: SUCCESS_FORMAT += GREEN
+}
+
+/// Updates output format for `log`
+
+/// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
+pub fun update_log_format(prefix_style: Text, monotone: Bool = false): Null {
+    LOG_FORMAT = print_prefix(prefix_style, "INFO", BLUE, BLUE_BG)
+    if monotone: LOG_FORMAT += BLUE
+}
+
+/// Reloads all formats with `PREFIX_FORMAT`
+pub fun reload_format() {
+    update_error_format(PREFIX_FORMAT);
+    update_log_format(PREFIX_FORMAT);
+    update_success_format(PREFIX_FORMAT);
+}
+
+fun lib_error(message: Text): Null? {
+    echo("{print_prefix("inverted", "LIB ERROR", RED, RED_BG)} {message}{NC}")
+    fail(2)
+}
+
+/// Prints an error message with predefined format
+pub fun error(message: Text, with_timestamp: Bool = false): Null {
+    if with_timestamp:
+        trust $ printf "{GRAY}%({TIMESTAMP_FORMAT})T{NC} " $;
+    echo("{ERROR_FORMAT} {message}{NC}")
+}
+
+/// Prints an error message with predefined format and fails with specified code
+pub fun error_fail(message: Text, code: Int = 1, with_timestamp: Bool = false, monotone: Bool = false): Null? {
+    if with_timestamp:
+        trust $ printf "{GRAY}%({TIMESTAMP_FORMAT})T{NC} " $;
+    echo("{ERROR_FORMAT} {message}{NC}")
+    fail(code);
+}
+
+/// Prints an error message with predefined format and exits with specified exit code
+pub fun error_exit(message: Text, code: Int = 1, with_timestamp: Bool = false, monotone: Bool = false): Null {
+    if with_timestamp:
+        trust $ printf "{GRAY}%({TIMESTAMP_FORMAT})T{NC} " $;
+    echo("{ERROR_FORMAT} {message}{NC}")
+    exit(code);
+}
+
+/// Prints "Invalid Argument" error with marking the invalid argument
+/// `position` is the array index of the invalid argument
+/// If `correct` is supplied, an extra "Did you mean <correct>?" is printed
+pub fun error_invalid_argument(arguments: [Text], position: Int, correct: Text = ""): Null? {
+    if len(arguments) > position + 1: lib_error("The arguments array is shorter than the argument position")?
+    error("Invalid argument");
+    arguments[position] = "{RED}{UNDERLINE}{arguments[position]}{NC}"
+
+    trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}\$0{NC} {arguments}" $
+    if len(correct) > 0: echo("Did you mean {BOLD}{WHITE}{correct}{NC}?");
+}
+
+/// Prints a log message with predefined format
+pub fun log(message: Text, with_timestamp: Bool = false): Null {
+    if with_timestamp:
+        trust $ printf "{GRAY}%({TIMESTAMP_FORMAT})T{NC} " $
+    echo("{LOG_FORMAT} {message}{NC}")
+}
+
+/// Prints a success message with predefined format
+pub fun success(message: Text, with_timestamp: Bool = false): Null {
+    if with_timestamp:
+        trust $ printf "{GRAY}%({TIMESTAMP_FORMAT})T{NC} " $
+    echo("{SUCCESS_FORMAT} {message}{NC}")
+}
+
+/// Prints a warning message with predefined format
+pub fun warn(message: Text, with_timestamp: Bool = false): Null {
+    if with_timestamp:
+        trust $ printf "{GRAY}%({TIMESTAMP_FORMAT})T{NC} " $
+    echo("{WARN_FORMAT} {message}{NC}")
+}
+
+reload_format();
+
+update_error_format("minimal");
+error("test")
+update_error_format("classic");
+error("test
+now this looks very weird with that
+extra indentation")
+update_error_format("default");
+error("test\nok")
+update_error_format("inverted");
+error("test")
+echo("")
+update_log_format("minimal")
+log("test", true)
+update_log_format("classic");
+log("test", true)
+update_log_format("default");
+log("test", true)
+update_log_format("inverted");
+log("test", true)
+echo("")
+update_success_format("minimal")
+success("test")
+update_success_format("classic");
+success("test")
+update_success_format("default");
+success("test")
+update_success_format("inverted");
+success("test")
+echo("")
+update_warn_format("minimal")
+warn("test")
+update_warn_format("classic");
+warn("test")
+update_warn_format("default");
+warn("test")
+update_warn_format("inverted");
+warn("test")
+trust error_invalid_argument(["test", "--testing"], 1, "--test")
