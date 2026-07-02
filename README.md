@@ -22,6 +22,10 @@ Import into your project:
 
 ```ab
 import * from "../vendor/pretty-logs/src/main.ab"
+
+error("Something went wrong")
+update_format("inverted");
+success("Done");
 ```
 
 ### using git
@@ -35,7 +39,26 @@ Import into your project:
 
 ```ab
 import * from "/path/to/pretty-logs/src/main.ab"
+
+error("Something went wrong")
+update_format("inverted");
+success("Done");
 ```
+
+## Standard prefix formats
+
+### default
+<img width="153" height="105" alt="зображення" src="https://github.com/user-attachments/assets/04fad0f7-275d-43d9-9f80-f637b40c35b4" />
+
+### inverted
+<img width="153" height="105" alt="зображення" src="https://github.com/user-attachments/assets/b3e8efb4-eea5-41a8-885f-a90acf2d96bb" />
+
+### minimal
+<img width="153" height="105" alt="зображення" src="https://github.com/user-attachments/assets/0800ee72-283f-4423-a0a4-fd42314ba6dc" />
+
+### classic
+<img width="153" height="105" alt="зображення" src="https://github.com/user-attachments/assets/7344ce52-73f7-4251-94d1-a143a6ec3bc8" />
+
 
 
 ## `error`
@@ -70,7 +93,10 @@ pub fun error_invalid_argument(arguments: [Text], position: Int, correct: Text =
 
 Prints "Invalid Argument" error with marking the invalid argument
 `position` is the array index of the invalid argument
-If `correct` is supplied, an extra "Did you mean <correct>?" is printed
+If `correct` is supplied, an extra "Did you mean [correct]?" is printed
+
+<img width="328" height="94" alt="зображення" src="https://github.com/user-attachments/assets/eebd864d-1ab7-42c8-b3db-e95ec69765cd" />
+
 
 ## `lib_error`
 
@@ -116,23 +142,17 @@ Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
 pub fun update_log_format(prefix_style: Text, monotone: Bool = false): Null 
 ```
 
-Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
-
 ## `update_success_format`
 
 ```ab
 pub fun update_success_format(prefix_style: Text, monotone: Bool = false): Null 
 ```
 
-Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
-
 ## `update_warn_format`
 
 ```ab
 pub fun update_warn_format(prefix_style: Text, monotone: Bool = false): Null 
 ```
-
-Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
 
 ## `warn`
 
