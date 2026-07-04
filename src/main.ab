@@ -121,11 +121,11 @@ pub fun throw(type: Text, arguments: [Text], position: Int, correct: Text = ""):
             let missing_count = position - args_len;
             const missing_args = "";
             if len(correct) > 0 {
-                correct = " {RED_UNDERLINE}{GRAY}{correct}{NC} {GRAY}(tip){NC} ";
+                correct = " {RED_UNDERLINE}{GRAY}{correct}{NC} {GRAY}(tip){NC}";
                 missing_count = missing_count - 1;
             }
 
-            if missing_count > 0: trust $ printf -v "{nameof(missing_args)}" "{RED}{UNDERLINE}    {NC}%.0s" {1..=missing_count} $
+            if missing_count > 0: trust $ printf -v "{nameof(missing_args)}" " {RED}{UNDERLINE}    {NC}%.0s" {1..=missing_count} $
             trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}{script_name}{NC} {arguments}{correct}{missing_args}{NC}" $
             fail(1)
         }
