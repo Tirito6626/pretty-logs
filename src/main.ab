@@ -126,7 +126,7 @@ pub fun throw(type: Text, arguments: [Text], position: Int, correct: Text = ""):
             }
 
             if missing_count > 0: trust $ printf -v "{nameof(missing_args)}" " {RED}{UNDERLINE}    {NC}%.0s" {1..=missing_count} $
-            trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}{script_name}{NC} {arguments}{correct}{missing_args}{NC}" $
+            trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}{script_name}{NC}{arguments}{correct}{missing_args}{NC}" $
             fail(1)
         }
         type == "missing-value" {
