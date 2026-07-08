@@ -1,4 +1,4 @@
-import * from "src/main.ab"
+import { update_format, error, log, warn, success, throw } from "src/main.ab"
 
 main(args) {
     for item in ["default", "inverted", "minimal", "classic"] {
