@@ -66,7 +66,7 @@ pub fun error(message: Text, with_timestamp: Bool = false): Null {
 }
 
 /// Prints an error message with predefined format and fails with specified code
-pub fun error_fail(message: Text, code: Int = 1, with_timestamp: Bool = false, monotone: Bool = false): Null? {
+pub fun error_fail(message: Text, code: Int = 1, with_timestamp: Bool = false): Null? {
     if with_timestamp:
         trust $ printf "{GRAY}%({TIMESTAMP_FORMAT})T{NC} " $;
     echo("{ERROR_FORMAT} {message}{NC}")
@@ -74,7 +74,7 @@ pub fun error_fail(message: Text, code: Int = 1, with_timestamp: Bool = false, m
 }
 
 /// Prints an error message with predefined format and exits with specified exit code
-pub fun error_exit(message: Text, code: Int = 1, with_timestamp: Bool = false, monotone: Bool = false): Null {
+pub fun error_exit(message: Text, code: Int = 1, with_timestamp: Bool = false): Null {
     if with_timestamp:
         trust $ printf "{GRAY}%({TIMESTAMP_FORMAT})T{NC} " $;
     echo("{ERROR_FORMAT} {message}{NC}")
