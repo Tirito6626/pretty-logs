@@ -1,0 +1,13 @@
+import * from "../misc/colors.ab"
+import { split } from "std/text"
+pub fun func_invocation(name: Text, args: [Text], failable: Bool = false) {
+    const c_func = rgb(220, 220, 170)
+    const brac1 = rgb(218, 112, 214)
+    const brac2 = rgb(23, 159, 255)
+    const reserved = rgb(197, 134, 192)
+    echo("{GRAY}> {failable then "{reserved}trust"} {c_func}{name}{brac1}(")
+
+    for arg in args {
+        
+    }
+}

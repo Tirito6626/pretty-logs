@@ -1,0 +1,41 @@
+import * from "colors.ab"
+
+/// Updates output format for `error`
+///
+/// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
+pub fun update_error_format(prefix_style: Text, monotone: Bool = false): Null {
+    if len(prefix_style) > 0: ERROR_FORMAT = print_prefix(prefix_style, "ERROR", RED, RED_BG)
+    if monotone: ERROR_FORMAT += RED
+}
+
+/// Updates output format for `warn`
+///
+/// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
+pub fun update_warn_format(prefix_style: Text, monotone: Bool = false): Null {
+    if len(prefix_style) > 0: WARN_FORMAT = print_prefix(prefix_style, "WARN", YELLOW, YELLOW_BG)
+    if monotone: WARN_FORMAT += YELLOW
+}
+
+/// Updates output format for `success`
+///
+/// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
+pub fun update_success_format(prefix_style: Text, monotone: Bool = false): Null {
+    if len(prefix_style) > 0: SUCCESS_FORMAT = print_prefix(prefix_style, "SUCCESS", GREEN, GREEN_BG)
+    if monotone: SUCCESS_FORMAT += GREEN
+}
+
+/// Updates output format for `log`
+///
+/// Supported prefix styles: `default`, `classic`, `minimal`, `inverted` or custom
+pub fun update_log_format(prefix_style: Text, monotone: Bool = false): Null {
+    if len(prefix_style) > 0: LOG_FORMAT = print_prefix(prefix_style, "INFO", BLUE, BLUE_BG)
+    if monotone: LOG_FORMAT += BLUE
+}
+
+/// Reloads all formats
+pub fun update_format(prefix: Text = PREFIX_FORMAT, monotone: Bool = false) {
+    update_error_format(prefix, monotone);
+    update_log_format(prefix, monotone);
+    update_warn_format(prefix, monotone);
+    update_success_format(prefix, monotone);
+}

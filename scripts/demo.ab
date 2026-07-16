@@ -1,0 +1,39 @@
+import * from "src/main.ab"
+
+fun string(text: Text): Text {
+    return "{rgb(206, 145, 120)}\"{text}\"{NC}"
+}
+
+fun int(int: Int): Text {
+    return "{rgb(86, 156, 214)}{int}{NC}"  
+}
+
+main(args) {
+    for item in ["default", "inverted", "minimal", "classic"] {
+        echo("{item}:\n")
+        update_format(item);
+        error("test")
+        log("test")
+        warn("test")
+        success("test")
+        echo("")
+    }
+    update_format();
+    const c_func = rgb(220, 220, 170)
+    const brac1 = rgb(218, 112, 214)
+    const brac2 = rgb(23, 159, 255)
+    const reserved = rgb(197, 134, 192)
+    trust {
+        echo("{GRAY}> {reserved}trust {c_func}throw{brac1}({string("invalid-arg")}, {brac2}[{string("pretty-logs.ab")}, {string("test")}, {string("--testing")}{brac2}]{NC}, {int(1)}, {brac2}[{string("--test")}{brac2}]{brac1})\n")
+        throw("invalid-arg", ["pretty-logs.ab", "test", "--testing"], 1, ["--test"])
+        
+        echo("\n{GRAY}> {reserved}trust {c_func}throw{brac1}({string("too-few-args")}, {brac2}[{string("pretty-logs.ab")}, {string("test")}, {string("--testing")}{brac2}]{NC}, {int(4)}, {brac2}[{string("--test")}{brac2}]{brac1})\n")
+        throw("too-few-args", ["pretty-logs.ab", "test", "--testing"], 4, ["--test"])
+
+        echo("\n{GRAY}> {reserved}trust {c_func}throw{brac1}({string("too-few-args")}, {brac2}[{string("pretty-logs.ab")}, {string("test")}, {string("--test")}, {string("--foo")}, {string("--testing")}{brac2}]{NC}, {int(1)}, {brac2}[{string("<int>")}{brac2}]{brac1})\n")
+        throw("missing-value", ["pretty-logs.ab", "test", "--foo", "--testing"], 1, ["<int>"])
+
+        echo("\n{GRAY}> {reserved}trust {c_func}throw{brac1}({string("too-few-args")}, {brac2}[{string("pretty-logs.ab")},{string("test")}, {string("foo")}, {string("test")}{brac2}]{NC}, {int(1)}, {brac2}[{string("Text")}, {string("Bool")}{brac2}]{brac1})\n")
+        throw("invalid-value", ["pretty-logs.ab", "test", "--foo", "test"], 1, ["Text","Bool"])
+    }
+}

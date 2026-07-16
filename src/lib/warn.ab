@@ -1,0 +1,7 @@
+import * from "misc/colors.ab"
+/// Prints a warning message with predefined format
+pub fun warn(message: Text, with_timestamp: Bool = false): Null {
+    if with_timestamp:
+        trust $ printf "{GRAY}%({TIMESTAMP_FORMAT})T{NC} " $
+    echo("{WARN_FORMAT} {message}{NC}")
+}

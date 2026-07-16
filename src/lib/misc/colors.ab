@@ -1,4 +1,3 @@
-#!/bin/env amethyst
 const ESC = trust $ echo -e "\x1B" $ 
 pub const WHITE = "{ESC}[38;5;255m"
 pub const BLACK = "{ESC}[38;5;0m"
@@ -28,10 +27,13 @@ pub const UNDERLINE = "{ESC}[4m"
 pub const DIM = "{ESC}[2m"
 pub const NC = "{ESC}[0m"
 
+pub fun rgb(r: Int, g: Int, b: Int): Text {
+    return "{ESC}[38;2;{r};{g};{b}m"
+}
 
-pub const PREFIX_FORMAT = "default";
-#[allow_public_mutable]
-pub let TIMESTAMP_FORMAT = "%d/%m/%y %H:%M:%S";
+pub fun rgb_bg(r: Int, g: Int, b: Int): Text {
+    return "{ESC}[48;2;{r};{g};{b}m"
+}
 
 pub fun print_prefix(style: Text, string: Text, color: Text, color_bg: Text): Text {
     if {
@@ -41,3 +43,16 @@ pub fun print_prefix(style: Text, string: Text, color: Text, color_bg: Text): Te
         else: return "{color_bg}{WHITE}{BOLD} {string} {NC}"
     }
 }
+
+pub const PREFIX_FORMAT = "default";
+#[allow_public_mutable]
+pub let TIMESTAMP_FORMAT = "%d/%m/%y %H:%M:%S";
+
+#[allow_public_mutable]
+pub let ERROR_FORMAT = "";
+#[allow_public_mutable]
+pub let LOG_FORMAT = "";
+#[allow_public_mutable]
+pub let SUCCESS_FORMAT = "";
+#[allow_public_mutable]
+pub let WARN_FORMAT = "";

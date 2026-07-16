@@ -1,0 +1,106 @@
+import { error } from "error.ab"
+import { update_error_format } from "misc/update_format.ab"
+import * from "misc/colors.ab"
+import { join } from "std/text";
+import { array_contains, array_shift } from "std/array"
+
+fun lib_error(message: Text): Null? {
+    echo("{print_prefix("inverted", "LIB ERROR", RED, RED_BG)} {message}{NC}")
+    fail(2)
+}
+
+/// Throw a predefined error template
+/// 
+/// Default types:
+/// - "invalid-arg": "Invalid argument" error
+///   - `position` represents the array index of the invalid argument (excluding the argv[0])
+///   - If `correct` is supplied, an extra "Did you mean <correct>?" is printed
+/// - "too-few-args": "Too few arguments" error
+///   - `position` represents the minimum amount of arguments
+///   - If `correct` is supplied, it shows as a placeholder to one of the missing arguments
+/// - "missing-value": "Option requires a value" error
+///   - `position` represents the array index of the argument
+///   - If `correct` is supplied, it shows as a value placeholder for the option
+/// - "invalid-value": "Option expects type" error
+///   - `position` represents the array index of the argument
+///   - `correct` is mandatory in `<ValueType> <RequiredType>` format, separated by a comma. Arrays are not supported
+///
+/// Note: `arguments[0]` is consumed as the script name, use custom name if you're using custom arguments array
+pub fun throw(type: Text, arguments: [Text], position: Int, correct: [Text] = []): Null? {
+    const script_name = arguments[0];
+    array_shift(arguments)?;
+    const args_len = len(arguments);
+    if {
+        type == "invalid-arg" {
+            if args_len < position + 1: lib_error("The arguments array is shorter than the argument position")?
+            update_error_format("", true);
+            error("Invalid argument");
+            arguments[position] = "{RED}{UNDERLINE}{arguments[position]}{NC}"
+
+            trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}{script_name}{NC} {arguments}" $
+
+            if len(correct) >= 1:
+                echo("\n{GRAY}(tip){NC} Possible values: {BOLD}{WHITE}{join(correct, ", ")}{NC}");
+            
+            fail(1)
+        }
+        type == "too-few-args" {
+            if args_len >= position: lib_error("The arguments array already meets the length requirement")?
+            update_error_format("", true);
+            error("Too few arguments\nExpected {position}, but only {args_len} were provided");
+
+            let missing_count = position - args_len;
+            const missing_args = "";
+            let tips = "";
+            if len(correct) > 0 {
+                for key in correct {
+                    tips += "{RED_UNDERLINE}{GRAY}{correct}{NC} ";
+                    missing_count = missing_count - 1;
+                }
+            }
+
+            if missing_count > 0: trust $ printf -v "{nameof(missing_args)}" " {RED}{UNDERLINE}    {NC}%.0s" {1..=missing_count} $
+            trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}{script_name}{NC}{len(arguments) > 0 then " " else ""}{arguments} {tips}{missing_args}{NC}" $
+            fail(1)
+        }
+        type == "missing-value" {
+            if args_len < position + 1: lib_error("The arguments array is shorter than the argument position")?
+            update_error_format("", true);
+            error("Option '{arguments[position]}' requires a value, but none was provided");
+            const extra_args = args_len != position + 1 then arguments[position + 1..args_len] else [];
+            
+            let value = "";
+            
+            if len(correct) > 0:
+                for key in correct {
+                    value += "{GRAY}{RED_UNDERLINE}{correct}{NC} "
+                }
+            else: 
+                value = " {RED_UNDERLINE}    {NC} ";
+
+            trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}{script_name}{NC} {arguments[0..=position]} {value}{extra_args}{NC}" $
+            fail(1)
+        }
+        type == "invalid-value" {
+            if args_len < position + 2: lib_error("The arguments array is shorter than the argument value position")?
+            if len(correct) != 2: lib_error("Type \"invalid-value\" requires \"option\" argument with 2 keys")?
+
+            const option = arguments[position]
+            const value = arguments[position + 1];
+
+            const [type, expected_type] = correct;
+
+            if not array_contains(["Text", "Int", "Num", "Bool"], type) or not array_contains(["Text", "Int", "Num", "Bool"], expected_type):
+                lib_error("Invalid value type or expect type provided")?
+            
+            update_error_format("", true);
+
+            arguments[position + 1] = "{RED}{UNDERLINE}{value}{NC}";
+            error("Option '{option}' expects type {GREEN}{expected_type}{NC}, {RED}but got {GREEN}{type}{NC} {RED}instead");
+
+            trust $ echo "\n{BOLD}{WHITE}>{NC} {GRAY}{script_name}{NC} {arguments} {NC}" $
+            fail(1)
+        }
+        else: lib_error("Invalid error type provided")?
+    }
+}

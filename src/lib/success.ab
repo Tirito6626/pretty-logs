@@ -1,0 +1,8 @@
+import * from "misc/colors.ab"
+
+/// Prints a success message with predefined format
+pub fun success(message: Text, with_timestamp: Bool = false): Null {
+    if with_timestamp:
+        trust $ printf "{GRAY}%({TIMESTAMP_FORMAT})T{NC} " $
+    echo("{SUCCESS_FORMAT} {message}{NC}")
+}
