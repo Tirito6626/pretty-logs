@@ -54,7 +54,7 @@ pub fun throw(type: Text, arguments: [Text], position: Int, correct: [Text] = []
             let tips = "";
             if len(correct) > 0 {
                 for key in correct {
-                    tips += "{RED_UNDERLINE}{GRAY}{correct}{NC} ";
+                    tips += "{RED_UNDERLINE}{GRAY}{key}{NC} ";
                     missing_count = missing_count - 1;
                 }
             }
@@ -73,7 +73,7 @@ pub fun throw(type: Text, arguments: [Text], position: Int, correct: [Text] = []
             
             if len(correct) > 0:
                 for key in correct {
-                    value += "{GRAY}{RED_UNDERLINE}{correct}{NC} "
+                    value += "{GRAY}{RED_UNDERLINE}{key}{NC} "
                 }
             else: 
                 value = " {RED_UNDERLINE}    {NC} ";
