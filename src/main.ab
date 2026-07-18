@@ -9,10 +9,27 @@ pub import {
 
 pub import * from "lib/misc/colors.ab"
 
-pub import { error, error_exit, error_fail } from "lib/error.ab"
-pub import { warn } from "lib/warn.ab"
-pub import { log } from "lib/log.ab"
-pub import { success } from "lib/success.ab"
-pub import { throw } from "lib/throw.ab"
+pub import { error, error_exit, error_fail } from "lib/logging/error.ab"
+pub import { warn } from "lib/logging/warn.ab"
+pub import { log } from "lib/logging/log.ab"
+pub import { success } from "lib/logging/success.ab"
+pub import { throw } from "lib/logging/throw.ab"
 
+pub import { length_check } from "lib/typecheck/length.ab"
+pub import { 
+    match_native_regex, 
+    match_native_glob, 
+    capture_native_regex 
+} from "lib/typecheck/regex.ab"
+pub import {
+    typeof,
+    typecheck,
+    is_array
+} from "lib/typecheck/type.ab"
+pub import {
+    text_check,
+    int_check,
+    num_check,
+    bool_check
+} from "lib/typecheck/value.ab"
 update_format();

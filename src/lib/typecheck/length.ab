@@ -1,0 +1,11 @@
+/// Check if variable's or array's length satisfies the supplied length range
+pub fun length_check(
+    input: Text | Int | Num | [Text] | [Int] | [Num], 
+    min: Int = 0,
+    max: Int = 0
+): Bool {
+    if min <= 0 and max <= 0: return false 
+    if min > 0 and len(input) < min: return false
+    if max > 0 and len(input) > max: return false
+    return true
+}

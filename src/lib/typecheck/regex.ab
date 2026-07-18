@@ -1,0 +1,28 @@
+#!/bin/env amber
+pub fun match_native_regex(string: Text, regex: Text): Bool {
+    if len(regex) == 0 or len(string) == 0: return false
+
+    trust $ [[ "{string}" =~ {regex} ]] $
+    return status() == 0
+}
+
+pub fun capture_native_regex(string: Text, regex: Text, ref capture_array: []): Bool {
+    if len(regex) == 0 or len(string) == 0: return false
+    trust $ [[ "{string}" =~ {regex} ]] $
+    const capture_status = status()
+    trust $ 
+    case "{shellname()}" in
+        "bash") {nameof(capture_array)}=("\$\{BASH_REMATCH[@]}") ;; 
+        "zsh") {nameof(capture_array)}=("\$\{MATCH[@]}") ;; 
+        "ksh") {nameof(capture_array)}=("\$\{.sh.match[@]}") ;;
+    esac
+    $
+    return capture_status == 0
+}
+
+pub fun match_native_glob(string: Text, element: Text): Bool {
+    trust $ [[ "{string}" == *"{element}"* ]] $
+    return status() == 0
+}
+
+

@@ -1,0 +1,52 @@
+import { int_check, num_check, bool_check, text_check } from "value_check.ab"
+import { array_contains } from "std/array"
+import { lowercase } from "std/text"
+// type placeholders
+
+
+/// Returns the type of the variable as Text. Returns "Unknown" if none matched
+pub fun typeof(var): Text {
+    if {
+        var is Text: return "Text"
+        var is Int: return "Int"
+        var is Num: return "Num"
+        var is Bool: return "Bool"
+        var is Null: return "Null"
+        var is [Text]: return "[Text]"
+        var is [Int]: return "[Int]"
+        var is [Num]: return "[Num]"
+        var is [Bool]: return "[Bool]"
+        var is [Null]: return "[Null]"
+        else: return "Unknown"
+    }
+}
+/// Returns true if the variable is an array of any type
+pub fun is_array(var): Bool {
+        return var is [Text] or var is [Int] or var is [Num] or var is [Bool] or var is [Null]
+}
+
+/// Compares the input with target type
+///
+/// See "Type Placeholders" for default type placeholders
+/// 
+pub fun typecheck(
+        input: Text | Int | Num | Bool | Num | Null,
+        type: Text | [Text]
+    ): Bool {
+    type = lowercase(type);
+    const string = input as Text;
+    const length = len(string);
+    if {
+        type == "bool":
+            return input is Bool or bool_check(string)
+        type == "text":
+            return length != 0 and (input is Text or text_check(string))
+        type == "int":
+            return input is Int or int_check(string)
+        type == "num":
+            return input is Num or input is Int or num_check(string)
+        type == "null":
+            return input is Null or length == 0
+        else: return false
+    }
+}

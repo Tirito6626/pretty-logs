@@ -1,0 +1,23 @@
+import { array_contains } from "std/array"
+
+/// Check if the variable is an integer
+pub fun int_check(string: Text): Bool {
+    trust silent $ [ "{string}" -eq "{string}" ] $
+    return status() == 0
+}
+
+pub fun text_check(string): Bool {
+    const value = string as Text;
+    return not num_check(value) and not int_check(value) and not bool_check(value) and len(value) > 0 
+}
+
+/// Check if the variable is a number/float
+pub fun num_check(string: Text): Bool {
+    trust silent $ printf "%f" "{string}" $
+    return status() == 0
+}
+
+/// Check if the variable is an boolean
+pub fun bool_check(string: Text): Bool {
+    return array_contains(["true", "false", "1", "0"], string)
+}
