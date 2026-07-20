@@ -1,4 +1,4 @@
-const ESC = trust $ echo -e "\x1B" $ 
+pub const ESC = trust $ echo -e "\x1B" $ 
 pub const WHITE = "{ESC}[38;5;255m"
 pub const BLACK = "{ESC}[38;5;0m"
 

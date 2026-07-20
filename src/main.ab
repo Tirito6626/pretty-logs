@@ -9,11 +9,11 @@ pub import {
 
 pub import * from "lib/misc/colors.ab"
 
-pub import { error, error_exit, error_fail } from "lib/logging/error.ab"
-pub import { warn } from "lib/logging/warn.ab"
-pub import { log } from "lib/logging/log.ab"
-pub import { success } from "lib/logging/success.ab"
-pub import { throw } from "lib/logging/throw.ab"
+pub import { error, error_exit, error_fail } from "lib/io/error.ab"
+pub import { warn } from "lib/io/warn.ab"
+pub import { log } from "lib/io/log.ab"
+pub import { success } from "lib/io/success.ab"
+pub import { throw } from "lib/io/throw.ab"
 
 pub import { length_check } from "lib/typecheck/length.ab"
 pub import { 

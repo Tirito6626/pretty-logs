@@ -1,0 +1,67 @@
+import { int_check, num_check, bool_check } from "../typecheck/value_check.ab"
+import { ESC } from "../misc/colors.ab"
+import { array_contains } from "std/array"
+import { lowercase } from "std/text"
+
+fun prompt1(prompt: Text, hidden: Bool): Text {
+    const output = ""
+    if not hidden {
+        if {
+            shellname() == "bash": trust $ read -p "{prompt}" {nameof(output)} || read -p "{prompt}" {nameof(output)} < /dev/tty $
+            shellname() == "zsh": trust $ read "?{prompt}" || read "?{prompt}" < /dev/tty $
+            shellname() == "ksh": trust $ read {nameof(output)}?"{prompt}" $
+        }
+    } else {
+        if {
+            shellname() == "bash": trust $ read -s -p "{prompt}" {nameof(output)} || read -s -p "{prompt}" {nameof(output)} < /dev/tty $
+            shellname() == "zsh": trust $ read -s "?{prompt}" {nameof(output)} || read -s "?{prompt}" {nameof(output)} < /dev/tty $
+            shellname() == "ksh": trust $ stty -echo 2>/dev/null; read {nameof(output)}?"{prompt}"; stty echo 2>/dev/null $
+        }
+    }
+    return output
+}
+
+/// Read from standart input (/dev/stdin)
+///
+/// If `required` is true, user will be prompted until the the input is not empty and/or matches the type
+/// Supported types:
+/// 1: Text input
+/// 2: Integer input
+/// 3: Number input
+/// 4: Boolean input
+pub fun readline(type: Int, required: Bool = true, hidden: Bool = false, prompt: Text = ""): Text {
+    let result = ""
+
+    result = prompt1(prompt, hidden)
+    while required and result == "":
+        result = prompt1(prompt, hidden);
+
+    if {
+        type == 2 {
+            while not int_check(result):
+                result = prompt1(prompt, hidden);
+        }
+        type == 3 {
+            while not num_check(result):
+                result = prompt1(prompt, hidden);
+        }
+        type == 4 {
+            while not bool_check(result):
+                result = prompt1(prompt, hidden);
+        }
+    }
+    return result
+}
+
+
+/// Read from standard input for a confirmation
+/// 
+/// Any input is turned into lowercase and is compared with "y" or "yes"
+///
+/// If no input is supplied, `default` value is returned
+pub fun read_confirm(prompt: Text = "", default: Bool = false): Bool {
+    const value = lowercase(prompt1(prompt, false))
+    if len(value) == 0:
+        return default
+    return array_contains(["y", "yes"], value)
+}

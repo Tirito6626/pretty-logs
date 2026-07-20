@@ -8,11 +8,13 @@ pub fun int_check(string: Text): Bool {
 
 pub fun text_check(string): Bool {
     const value = string as Text;
-    return not num_check(value) and not int_check(value) and not bool_check(value) and len(value) > 0 
+    if len(value) == 0: return false
+    return not num_check(value) and not int_check(value) and not bool_check(value)
 }
 
 /// Check if the variable is a number/float
 pub fun num_check(string: Text): Bool {
+    if len(string) == 0: return false
     trust silent $ printf "%f" "{string}" $
     return status() == 0
 }
