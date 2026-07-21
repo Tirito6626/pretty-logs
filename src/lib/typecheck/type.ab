@@ -1,4 +1,4 @@
-import { int_check, num_check, bool_check, text_check } from "value_check.ab"
+import { int_check, num_check, bool_check, text_check } from "value.ab"
 import { array_contains } from "std/array"
 import { lowercase } from "std/text"
 // type placeholders

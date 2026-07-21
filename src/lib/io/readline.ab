@@ -1,8 +1,8 @@
-import { int_check, num_check, bool_check } from "../typecheck/value_check.ab"
+import { int_check, num_check, bool_check } from "../typecheck/value.ab"
 import { ESC } from "../misc/colors.ab"
 import { array_contains } from "std/array"
 import { lowercase } from "std/text"
-
+import { enable_func_debug } from "/root/projects/debugger/src/main.ab"
 fun prompt1(prompt: Text, hidden: Bool): Text {
     const output = ""
     if not hidden {
@@ -31,7 +31,7 @@ fun prompt1(prompt: Text, hidden: Bool): Text {
 /// 4: Boolean input
 pub fun readline(type: Int, required: Bool = true, hidden: Bool = false, prompt: Text = ""): Text {
     let result = ""
-
+    enable_func_debug()
     result = prompt1(prompt, hidden)
     while required and result == "":
         result = prompt1(prompt, hidden);
@@ -64,4 +64,10 @@ pub fun read_confirm(prompt: Text = "", default: Bool = false): Bool {
     if len(value) == 0:
         return default
     return array_contains(["y", "yes"], value)
+}
+
+main { 
+    echo(readline(1, true, false, "test"))
+    echo("ok")
+    echo(read_confirm())
 }
