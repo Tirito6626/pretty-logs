@@ -1,15 +1,15 @@
-# pretty-logs
+# alphabet
 
 Tiny, dependency-less, highly customizable Amber library for pretty error/log/warning messages
 
 ## Installation
 
 ### using amethyst
-Add `pretty-logs` to `amethyst.ini`:
+Add `alphabet` to `amethyst.ini`:
 
 ```ini
 [dependencies]
-pretty-logs = https://github.com/Tirito6626/pretty-logs
+alphabet = https://github.com/Tirito6626/alphabet
 ```
 
 Download the dependency:
@@ -21,7 +21,7 @@ amethyst install
 Import into your project:
 
 ```ab
-import * from "../vendor/pretty-logs/src/main.ab"
+import * from "../vendor/alphabet/src/main.ab"
 
 error("Something went wrong")
 update_format("inverted");
@@ -32,13 +32,13 @@ success("Done");
 Clone the repository:
 
 ```sh
-git clone https://github.com/Tirito6626/pretty-logs
+git clone https://github.com/Tirito6626/alphabet
 ```
 
 Import into your project:
 
 ```ab
-import * from "/path/to/pretty-logs/src/main.ab"
+import * from "/path/to/alphabet/src/main.ab"
 
 error("Something went wrong")
 update_format("inverted");
