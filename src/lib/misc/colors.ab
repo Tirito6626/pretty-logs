@@ -28,7 +28,7 @@ pub const CYAN_UNDERLINE = "{ESC}[4;58:5:38m"
 
 pub const GRAY = "{ESC}[38;5;241m"
 pub const GRAY_BG = "{ESC}[48;5;241m"
-pub const GRAY_BG = "{ESC}[4;58:5:241m"
+pub const GRAY_UNDERLINE = "{ESC}[4;58:5:241m"
 
 pub const PURPLE = "{ESC}[38;5;63m"
 pub const PURPLE_BG = "{ESC}[48;5;63m"
