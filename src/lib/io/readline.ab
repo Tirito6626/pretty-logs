@@ -33,9 +33,9 @@ pub fun readline(type: Int, required: Bool = true, hidden: Bool = false, prompt:
     let result = ""
     enable_func_debug()
     result = prompt1(prompt, hidden)
+    trust $ false $
     while required and result == "":
         result = prompt1(prompt, hidden);
-
     if {
         type == 2 {
             while not int_check(result):
@@ -67,7 +67,7 @@ pub fun read_confirm(prompt: Text = "", default: Bool = false): Bool {
 }
 
 main { 
-    echo(readline(1, true, false, "test"))
+    echo(readline(1, true, false, "test: "))
     echo("ok")
     echo(read_confirm())
 }

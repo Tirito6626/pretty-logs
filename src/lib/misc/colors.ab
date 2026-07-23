@@ -8,24 +8,37 @@ pub const RED_UNDERLINE = "{ESC}[4;58:5:1m"
 
 pub const GREEN = "{ESC}[38;5;2m"
 pub const GREEN_BG = "{ESC}[48;5;2m"
+pub const GREEN_UNDERLINE = "{ESC}[4;58:5:2m"
 
 pub const YELLOW = "{ESC}[38;5;214m"
 pub const YELLOW_BG = "{ESC}[48;5;214m"
+pub const YELLOW_UNDERLINE = "{ESC}[4;58:5:2m"
 
 pub const BLUE = "{ESC}[38;5;4m"
 pub const BLUE_BG = "{ESC}[48;5;4m"
+pub const BLUE_UNDERLINE = "{ESC}[4;58:5:4m"
 
 pub const MAGENTA = "{ESC}[38;5;5m"
+pub const MAGENTA_BG = "{ESC}[48;5;5m"
+pub const MAGENTA_UNDERLINE = "{ESC}[4;58:5:5m"
+
 pub const CYAN = "{ESC}[38;5;38m"
+pub const CYAN_BG = "{ESC}[48;5;38m"
+pub const CYAN_UNDERLINE = "{ESC}[4;58:5:38m"
 
 pub const GRAY = "{ESC}[38;5;241m"
-pub const GRAY_BG = "{ESC}[48;5;234m"
+pub const GRAY_BG = "{ESC}[48;5;241m"
+pub const GRAY_BG = "{ESC}[4;58:5:241m"
 
 pub const PURPLE = "{ESC}[38;5;63m"
-pub const BOLD = "{ESC}[1m"
-pub const UNDERLINE = "{ESC}[4m"
-pub const DIM = "{ESC}[2m"
+pub const PURPLE_BG = "{ESC}[48;5;63m"
+pub const PURPLE_UNDERLINE = "{ESC}[4;58:5:63m"
+
 pub const NC = "{ESC}[0m"
+pub const BOLD = "{ESC}[1m"
+pub const DIM = "{ESC}[2m"
+pub const UNDERLINE = "{ESC}[4m"
+
 
 pub fun rgb(r: Int, g: Int, b: Int): Text {
     return "{ESC}[38;2;{r};{g};{b}m"
